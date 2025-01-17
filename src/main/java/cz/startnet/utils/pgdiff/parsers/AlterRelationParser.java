@@ -115,6 +115,13 @@ public class AlterRelationParser {
             } else if (table != null && parser.expectOptional("DISABLE")) {
                 parseDisable(
                         parser, outputIgnoredStatements, relName, database);
+             }// Ajouter le support pour ATTACH PARTITION
+            else if (table != null && parser.expectOptional("ATTACH", "PARTITION")) {
+                final String partitionName = parser.parseIdentifier(); // Nom de la partition
+                parser.expect("FOR", "VALUES", "FROM");
+                final String fromValue = parser.parseStringLiteral();
+                parser.expect("TO");
+                final String toValue = parser.parseStringLiteral(); // TO value
             } else {
                 parser.throwUnsupportedCommand();
             }
