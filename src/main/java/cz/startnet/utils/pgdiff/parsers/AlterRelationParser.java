@@ -115,6 +115,32 @@ public class AlterRelationParser {
             } else if (table != null && parser.expectOptional("DISABLE")) {
                 parseDisable(
                         parser, outputIgnoredStatements, relName, database);
+            } // Ajouter le support pour ATTACH PARTITION
+            else if (table != null && parser.expectOptional("ATTACH", "PARTITION")) {
+            	final String partitionName = parser.parseIdentifier(); 
+
+                if( parser.expectOptional("FOR", "VALUES")) {
+                
+	                if (parser.expectOptional("FROM")) {
+	                    // Gestion des plages de valeurs (FROM ... TO ...)
+	                    final Object fromValue = parser.parseLiteral();
+	                    parser.expect("TO");
+	                    final Object toValue = parser.parseLiteral();
+	
+	                } else if (parser.expectOptional("IN")) {
+	                    // Gestion des listes de valeurs
+	                    final Object inValues = parser.parseLiteral();
+	
+	                } else {
+	                    throw new ParserException("Unexpected syntax after FOR VALUES at position " + parser.getPosition());
+	                }
+
+                }else if (parser.expectOptional("DEFAULT")) {
+
+                } else {
+                    throw new ParserException("Unexpected syntax after ATTACH PARTITION at position " + parser.getPosition());
+                }
+
             } else {
                 parser.throwUnsupportedCommand();
             }
