@@ -38,6 +38,7 @@ public class CreateIndexParser {
                 ParserUtils.getObjectName(parser.parseIdentifier());
 
         parser.expect("ON");
+        parser.expectOptional("ONLY");
 
         final String tableName = parser.parseIdentifier();
         final String definition = parser.getRest();
